@@ -3,6 +3,7 @@ export const allAvatarStyles = ["Circle", "Transparent"];
 export const allPiecesOptions = [
   {
     type: "topType",
+    pieceType: "top",
     options: [
       "NoHair",
       "Eyepatch",
@@ -43,6 +44,7 @@ export const allPiecesOptions = [
   },
   {
     type: "accessoriesType",
+    pieceType: "accessories",
     options: [
       "Blank",
       "Kurt",
@@ -55,6 +57,7 @@ export const allPiecesOptions = [
   },
   {
     type: "hairColor",
+    pieceType: "hair",
     options: [
       "Auburn",
       "Black",
@@ -71,6 +74,7 @@ export const allPiecesOptions = [
   },
   {
     type: "facialHairType",
+    pieceType: "facialHair",
     options: [
       "Blank",
       "BeardMedium",
@@ -82,6 +86,7 @@ export const allPiecesOptions = [
   },
   {
     type: "facialHairColor",
+    pieceType: "facialHairColor",
     options: [
       "Auburn",
       "Black",
@@ -95,6 +100,7 @@ export const allPiecesOptions = [
   },
   {
     type: "clotheType",
+    pieceType: "clothe",
     options: [
       "BlazerShirt",
       "BlazerSweater",
@@ -109,6 +115,7 @@ export const allPiecesOptions = [
   },
   {
     type: "clotheColor",
+    pieceType: "clotheColor",
     options: [
       "Black",
       "Blue01",
