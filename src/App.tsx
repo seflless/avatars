@@ -18,7 +18,7 @@ function randomTypeOption(type: string) {
 function App() {
   const avatars = [];
   const avatarDimension = 100;
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 50; i++) {
     avatars.push(
       <span>
         <Avatar
@@ -70,10 +70,10 @@ function App() {
     });
     console.log(options);
     return (
-      <div key={pieceIndex}>
-        <h2>{type.type}</h2>
+      <>
+        <h1>{type.type}</h1>
         <div>{options}</div>
-      </div>
+      </>
     );
   });
 
@@ -82,10 +82,8 @@ function App() {
       <h1>Avatar</h1>
       <div id="avatars">{avatars}</div>
 
-      <div>
-        <h2>Avatar Pieces</h2>
-        <div>{pieces}</div>
-      </div>
+      <h1>Avatar Pieces</h1>
+      <div>{pieces}</div>
     </>
   );
 }
