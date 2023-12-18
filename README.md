@@ -7,7 +7,7 @@
 ## Development
 
 ```
-git clone
+git clone git@github.com:seflless/avatars.git
 cd avatars
 npm install
 npm run dev
