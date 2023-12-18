@@ -3,8 +3,8 @@
 // import viteLogo from "/vite.svg";
 import "./App.css";
 
-import Avatar, { Piece } from "avataaars";
-import { allPiecesOptions, allAvatarStyles } from "./AvatarOptions";
+import Avatar from "avataaars";
+import { allPiecesOptions } from "./AvatarOptions";
 
 function randomElement(options: string[]) {
   return options[Math.floor(Math.random() * options.length)];
