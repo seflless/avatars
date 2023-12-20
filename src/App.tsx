@@ -24,7 +24,12 @@ function App() {
     console.log(event.currentTarget.childNodes[0]);
 
     const svgElement = event.currentTarget.childNodes[0] as SVGAElement;
-    const copyText = svgElement.outerHTML;
+    let copyText = svgElement.outerHTML;
+
+    const newDims = 650;
+    copyText = copyText
+      .replace(`width="264px"`, `width="${newDims}px"`)
+      .replace(`height="280px"`, `height="${newDims}px"`);
 
     // Copy the text inside the text field
     navigator.clipboard.writeText(copyText);
