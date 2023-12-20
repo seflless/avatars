@@ -5,6 +5,7 @@ import "./App.css";
 
 import Avatar, { Piece } from "avataaars";
 import { allPiecesOptions } from "./AvatarOptions";
+import { useState, PointerEvent } from "react";
 
 function randomElement(options: string[]) {
   return options[Math.floor(Math.random() * options.length)];
@@ -18,11 +19,41 @@ function randomTypeOption(type: string) {
 function App() {
   const avatars = [];
   const avatarDimension = 100;
+
+  const onAvatarClick = (event: PointerEvent<HTMLDivElement>): void => {
+    console.log(event.currentTarget.childNodes[0]);
+
+    const svgElement = event.currentTarget.childNodes[0] as SVGAElement;
+    const copyText = svgElement.outerHTML;
+
+    // Copy the text inside the text field
+    navigator.clipboard.writeText(copyText);
+
+    const clipboardIcon = event.currentTarget.querySelector(
+      ".clipboard-icon"
+    ) as HTMLSpanElement;
+    // Function to trigger the glow effect
+    function triggerGlow() {
+      clipboardIcon.classList.add("flash");
+
+      // Remove the class after animation ends (2 seconds here)
+      setTimeout(() => {
+        clipboardIcon.classList.remove("flash");
+      }, 1000);
+    }
+
+    // Example: Trigger the glow effect on page load
+    triggerGlow();
+  };
+
   for (let i = 0; i < 50; i++) {
     avatars.push(
-      <span>
+      <span
+        key={i}
+        onPointerDownCapture={onAvatarClick}
+        style={{ cursor: "pointer" }}
+      >
         <Avatar
-          key={i}
           style={{
             width: avatarDimension,
             height: avatarDimension,
@@ -42,11 +73,21 @@ function App() {
           skinColor={randomTypeOption("skinColor")}
           pieceSize={randomTypeOption("pieceSize")}
         />
+        <span
+          style={{
+            position: "relative",
+            left: -32,
+            top: -88,
+          }}
+          className="clipboard-icon"
+        >
+          ✅
+        </span>
       </span>
     );
   }
 
-  const pieces = allPiecesOptions.map((type, pieceIndex) => {
+  const pieces = allPiecesOptions.map((type, typeIndex) => {
     const options = type.options.map((option, optionIndex) => {
       return (
         <Piece
@@ -68,22 +109,39 @@ function App() {
         // />
       );
     });
-    console.log(options);
+
     return (
-      <>
+      <div key={typeIndex}>
         <h1>{type.type}</h1>
         <div>{options}</div>
-      </>
+      </div>
     );
   });
 
+  const [randomSeed, setRandomSeed] = useState(0);
+
   return (
     <>
-      <h1>Avatar</h1>
+      <h1 style={{ margin: "20px 0px 0px 0px" }}>
+        Avatar{" "}
+        <button
+          style={{
+            border: "none",
+            background: "none",
+            fontSize: "1em",
+            cursor: "pointer",
+          }}
+          onPointerDown={() => setRandomSeed(Math.random())}
+        >
+          🔀
+        </button>
+      </h1>
+      <p>Tap an Avatar to copy SVG to clipboard</p>
       <div id="avatars">{avatars}</div>
 
       <h1>Avatar Pieces</h1>
       <div>{pieces}</div>
+      <p>Random seed: {randomSeed}</p>
     </>
   );
 }
