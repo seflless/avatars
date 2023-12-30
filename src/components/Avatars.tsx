@@ -1,7 +1,13 @@
 "use client";
 import Avatar, { Piece } from "avataaars";
 import { allPiecesOptions } from "../AvatarOptions";
-import { useState, PointerEvent, useLayoutEffect, useRef } from "react";
+import {
+  useState,
+  PointerEvent,
+  useLayoutEffect,
+  useRef,
+  useMemo,
+} from "react";
 import { Generate, svgToDataUri } from "@/fal/Generate";
 
 function randomElement(options: string[]) {
@@ -13,13 +19,42 @@ function randomTypeOption(type: string) {
   return randomElement(_type?.options || []);
 }
 
+type AvatarSettings = {
+  topType: string;
+  accessoriesType: string;
+  hairColor: string;
+  facialHairType: string;
+  clotheType: string;
+  clotheColor: string;
+  eyeType: string;
+  eyebrowType: string;
+  mouthType: string;
+  skinColor: string;
+};
+
+function generateRandomAvatar(): AvatarSettings {
+  return {
+    topType: randomTypeOption("topType"),
+    accessoriesType: randomTypeOption("accessoriesType"),
+    hairColor: randomTypeOption("hairColor"),
+    facialHairType: randomTypeOption("facialHairType"),
+    clotheType: randomTypeOption("clotheType"),
+    clotheColor: randomTypeOption("clotheColor"),
+    eyeType: randomTypeOption("eyeType"),
+    eyebrowType: randomTypeOption("eyebrowType"),
+    mouthType: randomTypeOption("mouthType"),
+    skinColor: randomTypeOption("skinColor"),
+  };
+}
+
 export default function Avatars() {
-  const avatars = [];
   const avatarDimension = 150;
 
-  const [randomSeed, setRandomSeed] = useState(0);
-
   const imageRef = useRef<HTMLImageElement>(null);
+
+  const [avatarSettings, setAvatarSettings] = useState<AvatarSettings>(
+    generateRandomAvatar()
+  );
 
   useLayoutEffect(() => {
     async function run() {
@@ -38,7 +73,7 @@ export default function Avatars() {
       imageRef.current!.src = dataUri;
     }
     void run();
-  }, [randomSeed]);
+  }, [avatarSettings]);
 
   const onAvatarClick = (event: PointerEvent<HTMLDivElement>): void => {
     console.log(event.currentTarget.childNodes[0]);
@@ -71,15 +106,24 @@ export default function Avatars() {
     triggerGlow();
   };
 
-  for (let i = 0; i < 50; i++) {
-    avatars.push(
-      <RandomAvatar
-        key={i}
-        onClick={onAvatarClick}
-        dimension={avatarDimension}
-      />
-    );
-  }
+  const avatars = useMemo(() => {
+    const _avatars = [];
+    for (let i = 0; i < 50; i++) {
+      const settings: AvatarSettings = generateRandomAvatar();
+      _avatars.push(
+        <RandomAvatar
+          key={i}
+          avatarSettings={settings}
+          onClick={(event) => {
+            onAvatarClick(event);
+            setAvatarSettings(settings);
+          }}
+          dimension={avatarDimension}
+        />
+      );
+    }
+    return _avatars;
+  }, []);
 
   const pieces = allPiecesOptions.map((type, typeIndex) => {
     const options = type.options.map((option, optionIndex) => {
@@ -123,7 +167,7 @@ export default function Avatars() {
             fontSize: "1em",
             cursor: "pointer",
           }}
-          onPointerDown={() => setRandomSeed(Math.random())}
+          onPointerDown={() => setAvatarSettings(generateRandomAvatar())}
         >
           🔀
         </button>
@@ -133,6 +177,7 @@ export default function Avatars() {
         style={{ backgroundColor: "rgb(224,224,224)" }}
       >
         <RandomAvatar
+          avatarSettings={avatarSettings}
           id="source-avatar"
           onClick={onAvatarClick}
           dimension={400}
@@ -145,7 +190,6 @@ export default function Avatars() {
 
       <h1>Avatar Pieces</h1>
       <div>{pieces}</div>
-      <p>Random seed: {randomSeed}</p>
     </>
   );
 }
@@ -154,9 +198,15 @@ type RandomAvatarProps = {
   onClick: (event: PointerEvent<HTMLDivElement>) => void;
   dimension: number;
   id?: string;
+  avatarSettings: AvatarSettings;
 };
 
-function RandomAvatar({ onClick, dimension, id }: RandomAvatarProps) {
+function RandomAvatar({
+  onClick,
+  dimension,
+  id,
+  avatarSettings,
+}: RandomAvatarProps) {
   return (
     <span id={id} onPointerDownCapture={onClick} style={{ cursor: "pointer" }}>
       <Avatar
@@ -166,16 +216,17 @@ function RandomAvatar({ onClick, dimension, id }: RandomAvatarProps) {
         }}
         // avatarStyle={randomElement(allAvatarStyles)}
         avatarStyle="Transparent"
-        topType={randomTypeOption("topType")}
-        accessoriesType={randomTypeOption("accessoriesType")}
-        hairColor={randomTypeOption("hairColor")}
-        facialHairType={randomTypeOption("facialHairType")}
-        clotheType={randomTypeOption("clotheType")}
-        clotheColor={randomTypeOption("clotheColor")}
-        eyeType={randomTypeOption("eyeType")}
-        eyebrowType={randomTypeOption("eyebrowType")}
-        mouthType={randomTypeOption("mouthType")}
-        skinColor={randomTypeOption("skinColor")}
+        // topType={randomTypeOption("topType")}
+        // accessoriesType={randomTypeOption("accessoriesType")}
+        // hairColor={randomTypeOption("hairColor")}
+        // facialHairType={randomTypeOption("facialHairType")}
+        // clotheType={randomTypeOption("clotheType")}
+        // clotheColor={randomTypeOption("clotheColor")}
+        // eyeType={randomTypeOption("eyeType")}
+        // eyebrowType={randomTypeOption("eyebrowType")}
+        // mouthType={randomTypeOption("mouthType")}
+        // skinColor={randomTypeOption("skinColor")}
+        {...avatarSettings}
         // pieceSize={randomTypeOption("pieceSize")}
         // viewBox="0 0 800 800"
       />
