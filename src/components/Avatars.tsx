@@ -1,11 +1,8 @@
-// import { useState } from "react";
-// import reactLogo from "./assets/react.svg";
-// import viteLogo from "/vite.svg";
-import "./App.css";
-
+"use client";
 import Avatar, { Piece } from "avataaars";
-import { allPiecesOptions } from "./AvatarOptions";
-import { useState, PointerEvent } from "react";
+import { allPiecesOptions } from "../AvatarOptions";
+import { useState, PointerEvent, useLayoutEffect } from "react";
+import { Generate } from "@/fal/Generate";
 
 function randomElement(options: string[]) {
   return options[Math.floor(Math.random() * options.length)];
@@ -16,9 +13,13 @@ function randomTypeOption(type: string) {
   return randomElement(_type?.options || []);
 }
 
-function App() {
+export default function Avatars() {
   const avatars = [];
   const avatarDimension = 100;
+
+  useLayoutEffect(() => {
+    Generate();
+  }, []);
 
   const onAvatarClick = (event: PointerEvent<HTMLDivElement>): void => {
     console.log(event.currentTarget.childNodes[0]);
@@ -53,42 +54,11 @@ function App() {
 
   for (let i = 0; i < 50; i++) {
     avatars.push(
-      <span
+      <RandomAvatar
         key={i}
-        onPointerDownCapture={onAvatarClick}
-        style={{ cursor: "pointer" }}
-      >
-        <Avatar
-          style={{
-            width: avatarDimension,
-            height: avatarDimension,
-            margin: 5,
-          }}
-          // avatarStyle={randomElement(allAvatarStyles)}
-          avatarStyle="Transparent"
-          topType={randomTypeOption("topType")}
-          accessoriesType={randomTypeOption("accessoriesType")}
-          hairColor={randomTypeOption("hairColor")}
-          facialHairType={randomTypeOption("facialHairType")}
-          clotheType={randomTypeOption("clotheType")}
-          clotheColor={randomTypeOption("clotheColor")}
-          eyeType={randomTypeOption("eyeType")}
-          eyebrowType={randomTypeOption("eyebrowType")}
-          mouthType={randomTypeOption("mouthType")}
-          skinColor={randomTypeOption("skinColor")}
-          pieceSize={randomTypeOption("pieceSize")}
-        />
-        <span
-          style={{
-            position: "relative",
-            left: -32,
-            top: -88,
-          }}
-          className="clipboard-icon"
-        >
-          ✅
-        </span>
-      </span>
+        onClick={onAvatarClick}
+        dimension={avatarDimension}
+      />
     );
   }
 
@@ -141,6 +111,25 @@ function App() {
           🔀
         </button>
       </h1>
+      <RandomAvatar
+        id="source-avatar"
+        onClick={onAvatarClick}
+        dimension={400}
+      />
+      <h1 style={{ margin: "20px 0px 0px 0px" }}>
+        Avatar Grid{" "}
+        <button
+          style={{
+            border: "none",
+            background: "none",
+            fontSize: "1em",
+            cursor: "pointer",
+          }}
+          onPointerDown={() => setRandomSeed(Math.random())}
+        >
+          🔀
+        </button>
+      </h1>
       <p>Tap an Avatar to copy SVG to clipboard</p>
       <div id="avatars">{avatars}</div>
 
@@ -151,4 +140,45 @@ function App() {
   );
 }
 
-export default App;
+type RandomAvatarProps = {
+  onClick: (event: PointerEvent<HTMLDivElement>) => void;
+  dimension: number;
+  id?: string;
+};
+
+function RandomAvatar({ onClick, dimension, id }: RandomAvatarProps) {
+  return (
+    <span id={id} onPointerDownCapture={onClick} style={{ cursor: "pointer" }}>
+      <Avatar
+        style={{
+          width: dimension,
+          height: dimension,
+          margin: 5,
+        }}
+        // avatarStyle={randomElement(allAvatarStyles)}
+        avatarStyle="Transparent"
+        topType={randomTypeOption("topType")}
+        accessoriesType={randomTypeOption("accessoriesType")}
+        hairColor={randomTypeOption("hairColor")}
+        facialHairType={randomTypeOption("facialHairType")}
+        clotheType={randomTypeOption("clotheType")}
+        clotheColor={randomTypeOption("clotheColor")}
+        eyeType={randomTypeOption("eyeType")}
+        eyebrowType={randomTypeOption("eyebrowType")}
+        mouthType={randomTypeOption("mouthType")}
+        skinColor={randomTypeOption("skinColor")}
+        pieceSize={randomTypeOption("pieceSize")}
+      />
+      <span
+        style={{
+          position: "relative",
+          left: -32,
+          top: -88,
+        }}
+        className="clipboard-icon"
+      >
+        ✅
+      </span>
+    </span>
+  );
+}

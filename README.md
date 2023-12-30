@@ -1,14 +1,16 @@
-# Avataaars Usage Example
+# Generative Images from Avatars
 
-[Web Demo](https://seflless.github.io/avatars/dist/index.html)
+## Setup
 
-<img src="docs/screenshot.png"/>
+1.  Get a key from https://www.fal.ai/dashboard/keys and add it to `.env.local` as
 
-## Development
+        FAL_KEY=example:example
 
-```
-git clone git@github.com:seflless/avatars.git
-cd avatars
-npm install
-npm run dev
-```
+1.  Then just...
+
+        npm install
+        npm run dev
+
+## Basic Architecture
+
+Proxies fal API requests using fal's next proxy module and we deploy the full thing as a Next.js app, using Vercel naturally.
