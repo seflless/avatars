@@ -199,6 +199,7 @@ export default function Avatars() {
         />
         <img ref={imageRef} style={{ width: 400, height: 400 }} src="" alt="" />
       </div>
+      <h2 className="text-2xl py-2">Image&lsquo;s Influence</h2>
       <input
         type="range"
         min={0.1}
@@ -211,6 +212,8 @@ export default function Avatars() {
           setStrength(newStrenght);
         }}
       />
+
+      <p>{Math.floor(strength * 100)}%</p>
       <textarea
         className="rounded-2xl m-4 p-4"
         style={{ width: 800, height: 100 }}
