@@ -1,8 +1,8 @@
 "use client";
 import Avatar, { Piece } from "avataaars";
 import { allPiecesOptions } from "../AvatarOptions";
-import { useState, PointerEvent, useLayoutEffect } from "react";
-import { Generate } from "@/fal/Generate";
+import { useState, PointerEvent, useLayoutEffect, useRef } from "react";
+import { Generate, svgToDataUri } from "@/fal/Generate";
 
 function randomElement(options: string[]) {
   return options[Math.floor(Math.random() * options.length)];
@@ -15,11 +15,30 @@ function randomTypeOption(type: string) {
 
 export default function Avatars() {
   const avatars = [];
-  const avatarDimension = 100;
+  const avatarDimension = 150;
+
+  const [randomSeed, setRandomSeed] = useState(0);
+
+  const imageRef = useRef<HTMLImageElement>(null);
 
   useLayoutEffect(() => {
-    Generate();
-  }, []);
+    async function run() {
+      const avatarSVG = document.getElementById("source-avatar")
+        ?.childNodes[0] as unknown as SVGAElement;
+      if (!avatarSVG) {
+        throw new Error("No avatar SVG");
+      }
+      const avatarDataUri = await svgToDataUri(avatarSVG);
+      // console.log(avatarDataUri);
+
+      const dataUri = await Generate(avatarDataUri);
+      console.log("Generated dataUri");
+      console.log(dataUri);
+
+      imageRef.current!.src = dataUri;
+    }
+    void run();
+  }, [randomSeed]);
 
   const onAvatarClick = (event: PointerEvent<HTMLDivElement>): void => {
     console.log(event.currentTarget.childNodes[0]);
@@ -93,8 +112,6 @@ export default function Avatars() {
     );
   });
 
-  const [randomSeed, setRandomSeed] = useState(0);
-
   return (
     <>
       <h1 style={{ margin: "20px 0px 0px 0px" }}>
@@ -111,26 +128,19 @@ export default function Avatars() {
           🔀
         </button>
       </h1>
-      <RandomAvatar
-        id="source-avatar"
-        onClick={onAvatarClick}
-        dimension={400}
-      />
-      <h1 style={{ margin: "20px 0px 0px 0px" }}>
-        Avatar Grid{" "}
-        <button
-          style={{
-            border: "none",
-            background: "none",
-            fontSize: "1em",
-            cursor: "pointer",
-          }}
-          onPointerDown={() => setRandomSeed(Math.random())}
-        >
-          🔀
-        </button>
-      </h1>
-      <p>Tap an Avatar to copy SVG to clipboard</p>
+      <div
+        className="flex flex-row "
+        style={{ backgroundColor: "rgb(224,224,224)" }}
+      >
+        <RandomAvatar
+          id="source-avatar"
+          onClick={onAvatarClick}
+          dimension={400}
+        />
+        <img ref={imageRef} style={{ width: 400, height: 400 }} src="" alt="" />
+      </div>
+      <h1 style={{ margin: "20px 0px 0px 0px" }}>Inspiration</h1>
+      <p>Tap an Avatar to transmogrify it</p>
       <div id="avatars">{avatars}</div>
 
       <h1>Avatar Pieces</h1>
@@ -153,7 +163,6 @@ function RandomAvatar({ onClick, dimension, id }: RandomAvatarProps) {
         style={{
           width: dimension,
           height: dimension,
-          margin: 5,
         }}
         // avatarStyle={randomElement(allAvatarStyles)}
         avatarStyle="Transparent"
@@ -167,7 +176,8 @@ function RandomAvatar({ onClick, dimension, id }: RandomAvatarProps) {
         eyebrowType={randomTypeOption("eyebrowType")}
         mouthType={randomTypeOption("mouthType")}
         skinColor={randomTypeOption("skinColor")}
-        pieceSize={randomTypeOption("pieceSize")}
+        // pieceSize={randomTypeOption("pieceSize")}
+        // viewBox="0 0 800 800"
       />
       <span
         style={{
