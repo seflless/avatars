@@ -24,10 +24,10 @@ const { send, close } = fal.realtime.connect("110602490-lcm-sd15-i2i", {
   },
   onResult: (result) => {
     if (result.images && result.images[0]) {
-      console.log("hello!");
+      // console.log("hello!");
       // console.log(result.images[0]);
-      console.log("OUTPUT");
-      console.log(result.images[0].url);
+      // console.log("OUTPUT");
+      // console.log(result.images[0].url);
       requests[result.request_id](result.images[0].url);
       delete requests[result.request_id];
     }
@@ -52,8 +52,8 @@ export const Generate = debounce(
     //   prompt = `Children's drawing of a house magically made real`;
     // }
 
-    console.log("INPUT");
-    console.log(imageDataUri);
+    // console.log("INPUT");
+    // console.log(imageDataUri);
 
     // console.log(imageDataUri);
 

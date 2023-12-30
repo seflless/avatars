@@ -47,6 +47,13 @@ function generateRandomAvatar(): AvatarSettings {
   };
 }
 
+const presets = ["Baby", "Old Person", "Monster", "Cat"];
+function presetPrompt(preset: string) {
+  return `A award winning photograph of ${
+    preset === "Old Person" ? "an" : "a"
+  } ${preset}`;
+}
+
 export default function Avatars() {
   const avatarDimension = 150;
 
@@ -77,8 +84,8 @@ export default function Avatars() {
         prompt,
         strength,
         (imageDataUri) => {
-          console.log("Generated dataUri");
-          console.log(imageDataUri);
+          // console.log("Generated dataUri");
+          // console.log(imageDataUri);
 
           // if (imageRef.current) {
           imageRef.current!.src = imageDataUri;
@@ -199,7 +206,18 @@ export default function Avatars() {
         />
         <img ref={imageRef} style={{ width: 400, height: 400 }} src="" alt="" />
       </div>
-      <h2 className="text-2xl py-2">Image&lsquo;s Influence</h2>
+      <h1>Presets</h1>
+      <div id="presets">
+        {presets.map((preset, index) => (
+          <button
+            key={index}
+            onPointerDown={() => setPrompt(presetPrompt(preset))}
+          >
+            {preset}
+          </button>
+        ))}
+      </div>
+      <h1 className="text-2xl">Image&lsquo;s Influence</h1>
       <input
         type="range"
         min={0.1}

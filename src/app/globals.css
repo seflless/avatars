@@ -48,6 +48,13 @@ h1 {
   margin: 20px 0px;
 }
 
+h2 {
+  font-size: 1.2em;
+  line-height: 1.1;
+  color: black;
+  margin: 20px 0px;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -79,4 +86,12 @@ body {
   100% {
     opacity: 0;
   }
+}
+
+#presets button {
+  border: thin solid grey;
+  border-radius: 5px;
+  background-color: white;
+  padding: 5px 10px;
+  margin: 5px;
 }
