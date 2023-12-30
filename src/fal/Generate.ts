@@ -1,5 +1,7 @@
 import * as fal from "@fal-ai/serverless-client";
 
+import { debounce } from "throttle-debounce";
+
 fal.config({
   requestMiddleware: fal.withProxy({
     targetUrl: "/api/fal/proxy",
@@ -34,39 +36,48 @@ const { send, close } = fal.realtime.connect("110602490-lcm-sd15-i2i", {
 
 let requestId = 0;
 
-export async function Generate(imageDataUri: string) {
-  let prompt = `A realistic baby avatar`;
-  // if (imageDataUri === undefined) {
-  //   const response = await fetch("/childs-drawing-of-a-house.png");
-  //   const blob = await response.blob();
-  //   imageDataUri = await blobToDataUri(blob);
-  //   prompt = `Children's drawing of a house magically made real`;
-  // }
+export const Generate = debounce(
+  250,
+  async (
+    imageDataUri: string,
+    prompt: string,
+    strength: number,
+    cb: (imageDataUri: string) => void
+  ) => {
+    // let prompt = `A award winning photograph of a baby`;
+    // if (imageDataUri === undefined) {
+    //   const response = await fetch("/childs-drawing-of-a-house.png");
+    //   const blob = await response.blob();
+    //   imageDataUri = await blobToDataUri(blob);
+    //   prompt = `Children's drawing of a house magically made real`;
+    // }
 
-  console.log("INPUT");
-  console.log(imageDataUri);
+    console.log("INPUT");
+    console.log(imageDataUri);
 
-  // console.log(imageDataUri);
+    // console.log(imageDataUri);
 
-  // const prompt = `A realistic baby avatar`;
+    // const prompt = `A realistic baby avatar`;
 
-  return new Promise<string>((resolve, reject) => {
+    // return new Promise<string>((resolve, reject) => {
     const requestIdString = "requestId-" + requestId.toString();
     requestId++;
 
-    requests[requestIdString] = resolve;
+    requests[requestIdString] = cb;
     send({
       prompt,
       image_url: imageDataUri,
       sync_mode: true,
-      strength: 0.65,
+      // strength: 0.65,
+      strength,
       // seed: Math.abs(Math.random() * 10000), // TODO make this configurable in the UI
       seed: 0,
       request_id: requestIdString,
       enable_safety_checks: false,
     });
-  });
-}
+    // });
+  }
+);
 
 export async function blobToDataUri(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {

@@ -56,6 +56,12 @@ export default function Avatars() {
     generateRandomAvatar()
   );
 
+  const [prompt, setPrompt] = useState<string>(
+    `A award winning photograph of a baby`
+  );
+
+  const [strength, setStrength] = useState(0.65);
+
   useLayoutEffect(() => {
     async function run() {
       const avatarSVG = document.getElementById("source-avatar")
@@ -66,14 +72,22 @@ export default function Avatars() {
       const avatarDataUri = await svgToDataUri(avatarSVG);
       // console.log(avatarDataUri);
 
-      const dataUri = await Generate(avatarDataUri);
-      console.log("Generated dataUri");
-      console.log(dataUri);
+      const dataUri = await Generate(
+        avatarDataUri,
+        prompt,
+        strength,
+        (imageDataUri) => {
+          console.log("Generated dataUri");
+          console.log(imageDataUri);
 
-      imageRef.current!.src = dataUri;
+          // if (imageRef.current) {
+          imageRef.current!.src = imageDataUri;
+          // }
+        }
+      );
     }
     void run();
-  }, [avatarSettings]);
+  }, [avatarSettings, prompt, strength]);
 
   const onAvatarClick = (event: PointerEvent<HTMLDivElement>): void => {
     console.log(event.currentTarget.childNodes[0]);
@@ -172,6 +186,7 @@ export default function Avatars() {
           🔀
         </button>
       </h1>
+
       <div
         className="flex flex-row "
         style={{ backgroundColor: "rgb(224,224,224)" }}
@@ -184,6 +199,24 @@ export default function Avatars() {
         />
         <img ref={imageRef} style={{ width: 400, height: 400 }} src="" alt="" />
       </div>
+      <input
+        type="range"
+        min={0.1}
+        max={1.0}
+        step={0.01}
+        value={strength}
+        onChange={(e) => {
+          const newStrenght = parseFloat(e.target.value);
+          console.log(newStrenght);
+          setStrength(newStrenght);
+        }}
+      />
+      <textarea
+        className="rounded-2xl m-4 p-4"
+        style={{ width: 800, height: 100 }}
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+      />
       <h1 style={{ margin: "20px 0px 0px 0px" }}>Inspiration</h1>
       <p>Tap an Avatar to transmogrify it</p>
       <div id="avatars">{avatars}</div>
