@@ -7,28 +7,45 @@ export default function CameraFeed() {
   const imageRef = useRef<HTMLImageElement>(null);
   const startedAlreadyRef = useRef(false);
   const [shouldStart, setShouldStart] = useState(false);
+  const [opacity, setOpacity] = useState(0.4);
 
   return (
-    <>
-      <video
-        // style={{ display: shouldStart ? "inherit" : "none" }}
-
-        autoPlay
-        playsInline
-        ref={videoRef}
-      ></video>
-
-      <img style={{ opacity: 0.8, position: "absolute" }} ref={imageRef} />
-      <button
-        style={{ display: shouldStart ? "none" : "inherit", cursor: "pointer" }}
-        onClick={() => {
-          setShouldStart(true);
-          start(videoRef.current!, imageRef.current!);
+    <div>
+      <input
+        value={opacity}
+        onChange={(e) => setOpacity(parseFloat(e.target.value))}
+        type="range"
+        min="0"
+        max="1"
+        step="0.001"
+        style={{
+          display: shouldStart ? "inherit" : "none",
         }}
-      >
-        Start
-      </button>
-    </>
+      />
+      <div>
+        <img style={{ opacity, position: "absolute" }} ref={imageRef} />
+        <video
+          // style={{ display: shouldStart ? "inherit" : "none" }}
+
+          autoPlay
+          playsInline
+          ref={videoRef}
+        ></video>
+
+        <button
+          style={{
+            display: shouldStart ? "none" : "inherit",
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            setShouldStart(true);
+            start(videoRef.current!, imageRef.current!);
+          }}
+        >
+          Start
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -87,10 +104,10 @@ async function start(video: HTMLVideoElement, image: HTMLImageElement) {
 
             const dataUri = await Generate(
               cameraFeedDataUri,
-              "A picture of a monster",
-              0.65,
+              "A simple child's drawing of a monster",
+              //   0.65,
               //   0.1,
-              //   0.4,
+              0.4,
               (imageDataUri) => {
                 // console.log("Generated dataUri");
                 // console.log(imageDataUri);
