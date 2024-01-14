@@ -1,7 +1,10 @@
 # Generative Images from Avatars
-Exploration of using a classic avatar editor to control real-time generative AI. 
 
-[Live Demo](https://avatars-six.vercel.app/)
+Exploration of using a classic avatar editor to control real-time generative AI.
+
+- Live Demos
+- [Avatar](https://avatars-six.vercel.app/)
+- [Monsters](https://avatars-six.vercel.app/monsters)
 
 ## Setup
 
