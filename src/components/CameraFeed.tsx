@@ -105,9 +105,9 @@ async function start(video: HTMLVideoElement, image: HTMLImageElement) {
             const dataUri = await Generate(
               cameraFeedDataUri,
               "A simple child's drawing of a monster",
-              //   0.65,
+              0.65,
               //   0.1,
-              0.4,
+              // 0.4,
               (imageDataUri) => {
                 // console.log("Generated dataUri");
                 // console.log(imageDataUri);
@@ -117,7 +117,7 @@ async function start(video: HTMLVideoElement, image: HTMLImageElement) {
                 // }
               }
             );
-          }, 500);
+          }, 50);
         };
       }
     })

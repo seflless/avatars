@@ -1,6 +1,6 @@
 import * as fal from "@fal-ai/serverless-client";
 
-import { debounce } from "throttle-debounce";
+import { throttle } from "throttle-debounce";
 
 fal.config({
   requestMiddleware: fal.withProxy({
@@ -36,8 +36,8 @@ const { send, close } = fal.realtime.connect("110602490-lcm-sd15-i2i", {
 
 let requestId = 0;
 
-export const Generate = debounce(
-  250,
+export const Generate = throttle(
+  150,
   async (
     imageDataUri: string,
     prompt: string,
