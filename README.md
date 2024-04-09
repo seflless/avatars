@@ -20,3 +20,8 @@ Exploration of using a classic avatar editor to control real-time generative AI.
 ## Basic Architecture
 
 Proxies fal API requests using fal's next proxy module and we deploy the full thing as a Next.js app, using Vercel naturally.
+
+
+## Prio Art
+
+- https://zengm.com/facesjs/
